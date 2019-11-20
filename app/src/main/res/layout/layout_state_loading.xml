@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/cardview_dark_background"
+	android:gravity="center"
+	android:orientation="vertical">
+
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@id/textView_state_layout_loading_message"
+		style="@android:style/TextAppearance.Medium"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="16dp"
+		android:gravity="center_horizontal"
+		android:textStyle="normal"
+		android:visibility="gone"
+		tools:text="Loading..."
+		tools:visibility="visible" />
+
+	<ProgressBar
+		android:id="@id/progressBar_state_layout_loading"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:tint="?colorAccent" />
+
+</LinearLayout>
