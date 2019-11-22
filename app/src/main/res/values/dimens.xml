@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+	<dimen name="margin16">16dp</dimen>
+	<dimen name="margin8">8dp</dimen>
+
+	<dimen name="padding16">16dp</dimen>
+	<dimen name="padding8">8dp</dimen>
+
 	<dimen name="min_button_width">240dp</dimen>
+	<dimen name="height_divider">1dp</dimen>
+
+	<dimen name="height_pagination_item">120dp</dimen>
+
+	<dimen name="text_size_operation_dialog_header">20sp</dimen>
+	<dimen name="peek_height_operation_dialog">56dp</dimen>
+	<dimen name="text_size_pagination_item">20sp</dimen>
+
 </resources>

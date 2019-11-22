@@ -55,7 +55,10 @@ class EndlessScrollListenerViewModel : ViewModel() {
                     }
                     mockDataResponseLiveData.value = mockDataResponse
                     pageViewStateLiveData.value =
-                        pageViewStateLiveData.value?.copy(itemList = mockDataResponse.list, status = Status.SUCCESS)
+                        pageViewStateLiveData.value?.copy(
+                            itemList = mockDataResponse.list,
+                            status = Status.SUCCESS
+                        )
                 } else {
                     pageViewStateLiveData.value =
                         pageViewStateLiveData.value?.copy(status = Status.ERROR)
@@ -70,8 +73,39 @@ class EndlessScrollListenerViewModel : ViewModel() {
     }
 
     fun getNextPage() {
-        mockDataResponseLiveData.value?.let {
-            getPage(it.page + 1)
+        mockDataResponseLiveData.value?.let { mockDataResponse ->
+            getPage(mockDataResponse.page + 1)
         }
+    }
+
+    fun remove10Item() {
+        val itemList: List<MockData>? = mockDataLiveData.value
+        val mockDataResponse: MockDataResponse? = mockDataResponseLiveData.value
+        val pageViewState: EndlessScrollListenerViewState? = pageViewStateLiveData.value
+        requireNotNull(itemList)
+        requireNotNull(mockDataResponse)
+        requireNotNull(pageViewState)
+
+        val filteredList: List<MockData> = if (itemList.size > 9) {
+            itemList.subList(9, itemList.lastIndex)
+        } else {
+            emptyList()
+        }
+        mockDataLiveData.value = filteredList
+        mockDataResponseLiveData.value = mockDataResponse.copy(list = filteredList)
+        pageViewStateLiveData.value = pageViewState.copy(itemList = filteredList)
+
+        if (filteredList.isEmpty()) {
+            getNextPage()
+            // TODO trigger endless scroll listener
+        }
+    }
+
+    fun refresh() {
+        mockDataLiveData.value = emptyList()
+        mockDataResponseLiveData.value = null
+        pageViewStateLiveData.value = null
+        mockDataUseCase.reset()
+        loadInitial()
     }
 }

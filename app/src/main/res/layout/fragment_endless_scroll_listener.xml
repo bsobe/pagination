@@ -17,10 +17,26 @@
 		android:theme="@style/AppTheme.StateLayout"
 		app:showState="@{viewState.getState(context)}">
 
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/recyclerViewEndlessScrollListener"
+		<RelativeLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="match_parent">
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/recyclerViewEndlessScrollListener"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_above="@id/buttonOperations" />
+
+			<androidx.appcompat.widget.AppCompatButton
+				android:id="@+id/buttonOperations"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:background="@android:color/holo_orange_light"
+				android:text="@string/endless_scroll_operation"
+				android:textColor="@android:color/white" />
+
+		</RelativeLayout>
 
 	</com.erkutaras.statelayout.StateLayout>
 

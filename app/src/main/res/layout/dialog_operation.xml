@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<data>
+
+		<variable
+			name="viewState"
+			type="com.bsobe.paginationexample.ui.endless_scroll_listener.OperationsViewState" />
+
+	</data>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@android:color/white"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:paddingTop="@dimen/padding16"
+		android:paddingBottom="@dimen/padding16"
+		app:behavior_hideable="true"
+		app:behavior_peekHeight="@dimen/peek_height_operation_dialog"
+		app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin16"
+			android:layout_marginEnd="@dimen/margin16"
+			android:text="@string/operation_dialog_header_text"
+			android:textColor="@color/colorPrimary"
+			android:textSize="@dimen/text_size_operation_dialog_header"
+			android:textStyle="bold" />
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/height_divider"
+			android:layout_marginTop="@dimen/margin8"
+			android:background="@color/colorPrimaryDark" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/buttonRemove10"
+			android:layout_width="@dimen/min_button_width"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin16"
+			android:layout_marginTop="@dimen/margin16"
+			android:layout_marginEnd="@dimen/margin16"
+			android:background="@android:color/holo_orange_light"
+			android:text="@string/operation_dialog_remove_10"
+			android:textColor="@android:color/white" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/buttonRefresh"
+			android:layout_width="@dimen/min_button_width"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin16"
+			android:layout_marginTop="@dimen/margin8"
+			android:layout_marginEnd="@dimen/margin16"
+			android:background="@android:color/holo_blue_light"
+			android:text="@string/operation_dialog_refresh"
+			android:textColor="@android:color/white" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/buttonChangeLayout"
+			android:layout_width="@dimen/min_button_width"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin16"
+			android:layout_marginTop="@dimen/margin8"
+			android:layout_marginEnd="@dimen/margin16"
+			android:background="@android:color/holo_blue_light"
+			android:text="@{viewState.getLayoutManagerText(context)}"
+			android:textColor="@android:color/white" />
+
+	</LinearLayout>
+
+</layout>

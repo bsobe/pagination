@@ -1,8 +1,21 @@
 <resources>
+
 	<string name="app_name">PaginationExample</string>
+
 	<string name="google_pagination">Google Pagination</string>
 	<string name="endless_scroll_listener">Endless Scroll Listener</string>
-	<string name="pagination_error_title">Hata</string>
-	<string name="pagination_error_message">Beklenmedik bir hata oluştu</string>
-	<string name="pagination_try_again">Tekrar Dene</string>
+
+	<string name="pagination_error_title">Error</string>
+	<string name="pagination_error_message">An unexpected error occurred</string>
+	<string name="pagination_try_again">Try Again</string>
+
+	<string name="endless_scroll_operation">Operations</string>
+
+	<string name="use_grid">Use Grid</string>
+	<string name="use_linear">Use Linear</string>
+
+	<string name="operation_dialog_header_text">Pagination Operations</string>
+	<string name="operation_dialog_remove_10">Remove 10 item</string>
+	<string name="operation_dialog_refresh">Refresh</string>
+
 </resources>

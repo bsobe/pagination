@@ -15,6 +15,10 @@ class MockDataUseCase {
 
     private var errorPageIndex: Int = 2
 
+    fun reset() {
+        errorPageIndex = 2
+    }
+
     fun getPageItems(page: Int): Resource<MockDataResponse> {
         Thread.sleep(if (page == 0) INITIAL_LOADING_TIME else PAGING_ITEM_LOADING_TIME)
 

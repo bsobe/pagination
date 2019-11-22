@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/frameLayoutRoot"
+	android:id="@+id/materialCardRoot"
 	android:layout_width="match_parent"
-	android:layout_height="120dp">
+	android:layout_height="@dimen/height_pagination_item"
+	android:layout_margin="@dimen/margin8">
 
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/textViewText"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
-		android:padding="8dp"
+		android:padding="@dimen/padding8"
 		android:singleLine="true"
 		android:textColor="@android:color/white"
-		android:textSize="20sp"
+		android:textSize="@dimen/text_size_pagination_item"
 		tools:text="Random Text"
 		tools:textColor="@android:color/black" />
 
-</FrameLayout>
+</com.google.android.material.card.MaterialCardView>

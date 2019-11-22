@@ -8,13 +8,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsobe.paginationexample.MockData
 import com.bsobe.paginationexample.R
-import com.bsobe.paginationexample.RecyclerViewEndlessScrollListener
 import com.bsobe.paginationexample.databinding.FragmentEndlessScrollListenerBinding
 
 class EndlessScrollListenerFragment : Fragment() {
+
+    private var operationDialog: OperationsBottomSheetDialog? = null
+    private val gridLayoutManager by lazy { GridLayoutManager(requireActivity(), 2) }
+    private val linearLayoutManager by lazy { LinearLayoutManager(requireActivity()) }
 
     private lateinit var binding: FragmentEndlessScrollListenerBinding
     private val endlessScrollListenerViewModel: EndlessScrollListenerViewModel by lazy {
@@ -24,11 +28,8 @@ class EndlessScrollListenerFragment : Fragment() {
     private val endlessScrollListener: RecyclerViewEndlessScrollListener by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        object :
-            RecyclerViewEndlessScrollListener(binding.recyclerViewEndlessScrollListener.layoutManager as LinearLayoutManager) {
-            override fun onLoadNextPage(page: Int) {
-                endlessScrollListenerViewModel.getNextPage()
-            }
+        RecyclerViewEndlessScrollListener().apply {
+            loadListener = this@EndlessScrollListenerFragment::onLoadMore
         }
     }
 
@@ -58,6 +59,36 @@ class EndlessScrollListenerFragment : Fragment() {
             })
         setView()
         endlessScrollListenerViewModel.loadInitial()
+
+        binding.buttonOperations.setOnClickListener {
+            if (operationDialog == null) {
+                operationDialog = OperationsBottomSheetDialog(requireActivity())
+                    .setListener(
+                        remove10Listener = this@EndlessScrollListenerFragment::onRemove10,
+                        refreshListener = this@EndlessScrollListenerFragment::onRefresh,
+                        layoutManagerListener = this@EndlessScrollListenerFragment::onLayoutManagerChange
+                    )
+            }
+            operationDialog!!.show()
+        }
+    }
+
+    private fun onRemove10() {
+        endlessScrollListenerViewModel.remove10Item()
+    }
+
+    private fun onRefresh() {
+        endlessScrollListenerViewModel.refresh()
+    }
+
+    private fun onLayoutManagerChange(isGrid: Boolean) {
+        val layoutManager = if (isGrid) {
+            gridLayoutManager
+        } else {
+            linearLayoutManager
+        }
+        binding.recyclerViewEndlessScrollListener.layoutManager = layoutManager
+        binding.executePendingBindings()
     }
 
     private fun setView() {
@@ -65,12 +96,16 @@ class EndlessScrollListenerFragment : Fragment() {
             endlessScrollListenerViewModel.retryNextPage()
         }
         binding.recyclerViewEndlessScrollListener.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = linearLayoutManager
             adapter = EndlessScrollListenerAdapter(
                 this@EndlessScrollListenerFragment::onClickedItem
             )
             addOnScrollListener(endlessScrollListener)
         }
+    }
+
+    private fun onLoadMore(currentPage: Int) {
+        endlessScrollListenerViewModel.getNextPage()
     }
 
     private fun onClickedItem(clickedItem: MockData) {

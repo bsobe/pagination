@@ -30,7 +30,7 @@ class EndlessScrollListenerAdapter(
 
         fun bind(mockData: MockData) {
             itemView.findViewById<TextView>(R.id.textViewText).text = mockData.text
-            itemView.findViewById<View>(R.id.frameLayoutRoot).setBackgroundColor(mockData.color)
+            itemView.findViewById<View>(R.id.materialCardRoot).setBackgroundColor(mockData.color)
         }
 
     }

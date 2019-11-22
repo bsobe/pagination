@@ -30,7 +30,7 @@ class PaginationAdapter(private val clickListener: (MockData) -> (Unit)) :
 
         fun bind(mockData: MockData?) {
             itemView.findViewById<TextView>(R.id.textViewText).text = mockData?.text.orEmpty()
-            itemView.findViewById<View>(R.id.frameLayoutRoot)
+            itemView.findViewById<View>(R.id.materialCardRoot)
                 .setBackgroundColor(mockData?.color ?: Color.BLACK)
         }
 
