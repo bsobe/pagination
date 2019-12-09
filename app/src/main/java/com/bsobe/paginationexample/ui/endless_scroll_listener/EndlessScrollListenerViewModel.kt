@@ -30,13 +30,46 @@ class EndlessScrollListenerViewModel : ViewModel() {
     }
 
     fun onClickedItem(clickedItem: MockData) {
-        val filteredList = mockDataLiveData.value.orEmpty().filter { it != clickedItem }
-        mockDataLiveData.value = filteredList
+        showLoading()
+        removeItems(listOf(clickedItem))
+    }
+
+    private fun removeItems(removedItems: List<MockData>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val removeItemResponse = mockDataUseCase.removeItemWithList(removedItems)
+            val filteredList: List<MockData> = if (removeItemResponse.isStatusSuccess) {
+                mockDataLiveData.value.orEmpty().filter { removedItems.contains(it).not() }
+            } else {
+                emptyList()
+            }
+
+            viewModelScope.launch(Dispatchers.Main) {
+                mockDataLiveData.value = filteredList
+                pageViewStateLiveData.value = pageViewStateLiveData.value?.copy(
+                    itemList = filteredList,
+                    status = Status.SUCCESS
+                )
+                if (filteredList.isEmpty()) {
+                    mockDataResponseLiveData.value = MockDataResponse(emptyList(), 0)
+                    getNextPage()
+                    // TODO trigger endless scroll listener
+                } else {
+                    mockDataResponseLiveData.value?.let {
+                        mockDataResponseLiveData.value =
+                            it.copy(
+                                list = filteredList,
+                                page = it.page
+                            )
+                    }
+
+                }
+            }
+        }
     }
 
     fun retryNextPage() {
         mockDataResponseLiveData.value?.let {
-            getPage(it.page)
+            getPage(it.page + 1)
         }
     }
 
@@ -68,8 +101,10 @@ class EndlessScrollListenerViewModel : ViewModel() {
     }
 
     private fun showLoading() {
-        pageViewStateLiveData.value = pageViewStateLiveData.value?.copy(status = Status.LOADING)
-            ?: EndlessScrollListenerViewState(emptyList(), Status.LOADING)
+        viewModelScope.launch(Dispatchers.Main) {
+            pageViewStateLiveData.value = pageViewStateLiveData.value?.copy(status = Status.LOADING)
+                ?: EndlessScrollListenerViewState(emptyList(), Status.LOADING)
+        }
     }
 
     fun getNextPage() {
@@ -86,19 +121,17 @@ class EndlessScrollListenerViewModel : ViewModel() {
         requireNotNull(mockDataResponse)
         requireNotNull(pageViewState)
 
+        /*
         val filteredList: List<MockData> = if (itemList.size > 9) {
-            itemList.subList(9, itemList.lastIndex)
+            itemList.subList(10, itemList.lastIndex + 1)
         } else {
             emptyList()
-        }
         mockDataLiveData.value = filteredList
         mockDataResponseLiveData.value = mockDataResponse.copy(list = filteredList)
         pageViewStateLiveData.value = pageViewState.copy(itemList = filteredList)
-
-        if (filteredList.isEmpty()) {
-            getNextPage()
-            // TODO trigger endless scroll listener
         }
+         */
+        removeItems(itemList.subList(0, 10))
     }
 
     fun refresh() {
@@ -107,5 +140,10 @@ class EndlessScrollListenerViewModel : ViewModel() {
         pageViewStateLiveData.value = null
         mockDataUseCase.reset()
         loadInitial()
+    }
+
+    override fun onCleared() {
+        mockDataUseCase.reset()
+        super.onCleared()
     }
 }

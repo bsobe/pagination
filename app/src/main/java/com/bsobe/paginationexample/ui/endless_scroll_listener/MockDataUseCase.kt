@@ -1,21 +1,23 @@
 package com.bsobe.paginationexample.ui.endless_scroll_listener
 
-import com.bsobe.paginationexample.MockDataGenerator
+import com.bsobe.paginationexample.MockData
 import com.bsobe.paginationexample.MockDataResponse
+import com.bsobe.paginationexample.PagingDataGenerator
 import com.bsobe.paginationexample.Resource
 import com.bsobe.paginationexample.Status
 
-private const val INITIAL_ITEM_COUNT = 15
-private const val ITEM_COUNT_FOR_EACH_PAGE = 10
-
-private const val INITIAL_LOADING_TIME = 3000L
-private const val PAGING_ITEM_LOADING_TIME = 2000L
+private const val REMOVE_LOADING_TIME = 400L
+private const val INITIAL_LOADING_TIME = 300L
+private const val PAGING_ITEM_LOADING_TIME = 200L
+private const val ITEM_COUNT_FOR_PAGE = 10
 
 class MockDataUseCase {
 
+    private var pendingRemovedItemCount: Int = 0
     private var errorPageIndex: Int = 2
 
     fun reset() {
+        PagingDataGenerator.reset()
         errorPageIndex = 2
     }
 
@@ -27,10 +29,38 @@ class MockDataUseCase {
             return Resource(Status.ERROR, MockDataResponse(emptyList(), page), Exception())
         }
 
-        val mockDataResponse = MockDataGenerator.generateItem(
-            count = if (page == 0) INITIAL_ITEM_COUNT else ITEM_COUNT_FOR_EACH_PAGE,
-            nextPage = page
-        )
+        val mockDataResponse = PagingDataGenerator.getPage(page, ITEM_COUNT_FOR_PAGE)
         return Resource.success(mockDataResponse)
+    }
+
+    fun removeItem(removeItem: MockData): Resource<Boolean> {
+        Thread.sleep(REMOVE_LOADING_TIME)
+        PagingDataGenerator.removeItem(removeItem)
+        return Resource.success(true)
+    }
+
+    fun removeItemWithList(itemList: List<MockData>): Resource<Boolean> {
+        Thread.sleep(REMOVE_LOADING_TIME)
+        itemList.forEach {
+            PagingDataGenerator.removeItem(it)
+        }
+        pendingRemovedItemCount += itemList.size
+        return Resource.success(true)
+    }
+
+    private fun getPendingPageCount(): Int =
+        if (pendingRemovedItemCount % ITEM_COUNT_FOR_PAGE == 0) {
+            pendingRemovedItemCount / ITEM_COUNT_FOR_PAGE
+        } else {
+            (pendingRemovedItemCount / ITEM_COUNT_FOR_PAGE) + 1
+        }
+
+    fun getPendingPageIndex(currentPageIndex: Int): Int {
+        val index = currentPageIndex - getPendingPageCount()
+        return if (index < 0) {
+            0
+        } else {
+            index
+        }
     }
 }
